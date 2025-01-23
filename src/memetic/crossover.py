@@ -91,11 +91,11 @@ class AdaptiveCrossoverManager:
             new_strategy = "subtree"
             reason = "Stagnation detected"
         elif self.statistics.diversity < 0.5:
-            new_strategy = "uniform"
-            reason = "Low diversity (<0.5)"
-        elif self.statistics.complexity > 20:
             new_strategy = "blended"
-            reason = "High complexity (>20)"
+            reason = "Low diversity (<0.5)"
+        elif self.statistics.complexity > 5:
+            new_strategy = "uniform"
+            reason = "High complexity (>5)"
 
         if old_strategy != new_strategy:
             self.statistics.update_single_strategy(

@@ -109,10 +109,10 @@ class AdaptiveSelectionManager:
         if self.statistics.generations_no_improvement > 3:
             new_strategy = "roulette"
             reason = "Stagnation detected"
-        elif self.statistics.diversity < 5:
+        elif self.statistics.diversity < 0.1:
             new_strategy = "tournament"
             reason = "Low diversity detected"
-        elif self.statistics.complexity > 10:
+        elif self.statistics.complexity > 5:
             new_strategy = "rank"
             reason = "High complexity detected"
 

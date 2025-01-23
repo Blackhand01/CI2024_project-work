@@ -108,10 +108,10 @@ class AdaptiveMutationManager:
         if self.statistics.generations_no_improvement > 3:
             new_strategy = "diversity"
             reason = "Detected stagnation (no improvement for 7 generations)"
-        elif self.statistics.complexity > 12_000:
+        elif self.statistics.complexity > 5:
             new_strategy = "shrink"
-            reason = "High complexity (>12,000)"
-        elif self.statistics.diversity < 3:
+            reason = "High complexity (>5)"
+        elif self.statistics.diversity < 0.1:
             new_strategy = "subtree"
             reason = "Low diversity (<3)"
         else:

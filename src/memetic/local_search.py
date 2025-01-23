@@ -119,18 +119,16 @@ class LocalSearchManager:
         previous_strategy = self.active_strategy
         reason = "Default strategy"
 
-        if self.statistics.complexity > 15:
+        if self.statistics.complexity > 5:
             self.active_strategy = "hill_climb"
-            reason = "High complexity (>15)"
-        elif self.statistics.diversity < 3:
+            reason = "High complexity (>5)"
+        elif self.statistics.diversity < 0.1:
             self.active_strategy = "tabu_search"
-            reason = "Low diversity (<3)"
-        elif self.temperature > 0.1:
-            self.active_strategy = "simulated_annealing"
-            reason = "High temperature (>0.1)"
+            reason = "Low diversity (<0.1)"
         else:
-            self.active_strategy = "random_improvement"
-            reason = "Default conditions"
+            self.active_strategy = "simulated_annealing"
+            reason = "Default strategy"
+
 
         self.statistics.update_single_strategy(
             strategy_type="local_search",
