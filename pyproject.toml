@@ -6,9 +6,14 @@ authors = [
     {name = "Stefano Roy Bisignano",email = "bisiwork01@gmail.com"}
 ]
 readme = "README.md"
+packages = [{include = "src"}]  # Specifica la cartella con il codice
 requires-python = ">=3.13"
 dependencies = [
-    "numpy (>=2.2.2,<3.0.0)"
+    "numpy (>=2.2.2,<3.0.0)",
+    "matplotlib (>=3.10.0,<4.0.0)",
+    "pandas (>=2.2.3,<3.0.0)",
+    "scipy (>=1.15.1,<2.0.0)",
+    "tqdm (>=4.67.1,<5.0.0)"
 ]
 
 

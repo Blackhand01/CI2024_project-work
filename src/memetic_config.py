@@ -3,7 +3,7 @@
 # ==============================================
 
 # Population parameters
-POP_SIZE = 600               # Increased population size for greater diversity
+POP_SIZE = 100               # Increased population size for greater diversity
 MAX_DEPTH = 7                # Reduced maximum depth to mitigate bloat
 N_GENERATIONS = 50           # Increased number of generations
 TOURNAMENT_SIZE = 10          # Higher selective pressure
