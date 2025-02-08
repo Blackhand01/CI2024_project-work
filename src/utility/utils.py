@@ -15,14 +15,15 @@ from utility.plotting import Plotter
 
 def initialize_experiment(data_file, base_output_dir):
     """
-    Initializes paths, the logger, and directories for an experiment.
+    Initializes paths and directories for an experiment.
 
     Args:
         data_file (Path): Path to the data file.
         base_output_dir (str): Base output directory.
 
     Returns:
-        dict: Contains the initial configurations for the experiment.
+        dict: Contains the initial configurations for the experiment:
+              problem_id, problem_dir, log_dir, and plot_dir.
     """
     random.seed(SEED)
     np.random.seed(SEED)
@@ -35,17 +36,12 @@ def initialize_experiment(data_file, base_output_dir):
     log_dir.mkdir(parents=True, exist_ok=True)
     plot_dir.mkdir(parents=True, exist_ok=True)
 
-    logger = Logger(
-        log_dir=str(log_dir),
-        log_file_prefix=f"p_{problem_id}"
-    )
-
+    # NOTE: We no longer create a dedicated logger here.
     return {
         "problem_id": problem_id,
         "problem_dir": problem_dir,
         "log_dir": log_dir,
-        "plot_dir": plot_dir,
-        "logger": logger
+        "plot_dir": plot_dir
     }
 
 def load_data(data_file):
