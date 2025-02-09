@@ -171,6 +171,5 @@ cython_debug/
 .pypirc
 collected_code.txt
 report
-docs
 experiments
 scripts
