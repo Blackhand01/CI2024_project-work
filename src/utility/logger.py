@@ -5,26 +5,26 @@ from datetime import datetime
 from memetic_config import POP_SIZE, MAX_DEPTH, N_GENERATIONS, TOURNAMENT_SIZE, MUTATION_RATE, CROSSOVER_RATE, ELITISM, BLOAT_PENALTY
 
 class Logger:
-    # File globale in cui verrà salvato il riepilogo finale di tutti gli esperimenti
+    # Global file where the final summary of all experiments will be saved
     GLOBAL_SUMMARY_FILE = os.path.join("./docs", "global_evolution_summary.txt")
 
     def __init__(self, log_dir="./logs", log_file_prefix="gp_run"):
-        # Crea la cartella docs se non esiste
+        # Create the "docs" folder if it doesn't exist
         if not os.path.exists("./docs"):
             os.makedirs("./docs")
 
-        # Crea la cartella log_dir se non esiste
+        # Create the log directory if it doesn't exist
         os.makedirs(log_dir, exist_ok=True)
 
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-        # File CSV contenente metriche e messaggi per questo specifico esperimento
+        # CSV file containing metrics and messages for this specific experiment
         self.log_file = os.path.join(log_dir, f"{log_file_prefix}_{self.timestamp}_log.csv")
 
-        # File di log testuale generale (uno per ogni esecuzione)
+        # General textual log file (one per run)
         self.general_log_file = os.path.join("./docs", f"general_log_{self.timestamp}.txt")
 
-        # Header per la tabella delle metriche
+        # Header for the metrics table
         self.metrics_fields = [
             "timestamp",
             "generation",
@@ -37,32 +37,32 @@ class Logger:
             "mutation_strategy",
             "local_search_algorithm"
         ]
-        # Header per la tabella dei messaggi
+        # Header for the messages table
         self.messages_fields = [
             "timestamp",
             "message"
         ]
-        # Liste interne per accumulare log di metriche e messaggi
+        # Internal lists to accumulate metrics and messages logs
         self.metrics_logs = []
         self.messages_logs = []
 
-        # Lista per memorizzare i summary dei vari problemi processati
+        # List to store the summary of each processed problem
         self.problems_summary = []
 
-        # Configurazione del logging (console + file generale)
+        # Logging configuration (console + general file)
         logging.basicConfig(
             format="%(asctime)s - %(message)s",
             level=logging.INFO,
             handlers=[
-                logging.StreamHandler(),  # Output su console
-                logging.FileHandler(self.general_log_file, mode='a')  # Output su file generale
+                logging.StreamHandler(),  # Output to console
+                logging.FileHandler(self.general_log_file, mode='a')  # Output to the general file
             ]
         )
         self.logger = logging.getLogger("GPLogger")
 
     def log_metrics(self, generation=None, best_fitness=None, avg_fitness=None,
                     diversity=None, complexity=None, strategies=None, local_search=None):
-        """Accumula una riga di metriche nella lista interna."""
+        """Accumulate a row of metrics into the internal list."""
         row = {
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "generation": generation if generation is not None else "",
@@ -79,7 +79,7 @@ class Logger:
 
     def log_message(self, message):
         """
-        Accumula un messaggio (o una lista di messaggi) nella lista interna dei messaggi.
+        Accumulate a message (or a list of messages) into the internal messages list.
         """
         if isinstance(message, list):
             message = " | ".join(message)
@@ -92,13 +92,13 @@ class Logger:
     def info(self, message, generation=None, best_fitness=None, avg_fitness=None,
              diversity=None, complexity=None, strategies=None, local_search=None):
         """
-        Logga un messaggio informativo su console/file e, se presenti, salva anche le metriche.
+        Log an informational message to console/file and, if provided, also save the metrics.
         """
         if isinstance(message, list):
             message = " | ".join(message)
-        # Log su console e file generale
+        # Log to console and the general log file
         self.logger.info(message)
-        # Se ci sono metriche, aggiunge una riga alla sezione metriche
+        # If metrics are provided, add a row to the metrics section
         if any(v is not None for v in [
             generation, best_fitness, avg_fitness,
             diversity, complexity, strategies, local_search
@@ -107,13 +107,13 @@ class Logger:
                 generation, best_fitness, avg_fitness,
                 diversity, complexity, strategies, local_search
             )
-        # Logga sempre il messaggio nella sezione dei messaggi
+        # Always log the message in the messages section
         self.log_message(message)
 
     def interpret_metric(self, value, thresholds):
         """
-        Restituisce una stringa descrittiva ('Low', 'Medium' o 'High')
-        in base ai valori di soglia specificati.
+        Return a descriptive string ('Low', 'Medium', or 'High')
+        based on the specified threshold values.
         """
         if value <= thresholds[0]:
             return "Low"
@@ -124,10 +124,10 @@ class Logger:
 
     def generate_summary(self, stats, best_expression, total_time, start_time, end_time, reason, success=True):
         """
-        Genera un sommario dettagliato e lo aggiunge sia ai log locali sia al file globale.
+        Generate a detailed summary and add it both to the local logs and the global file.
         """
         strategy_usage = stats.get_strategy_usage()
-        diversity_category = self.interpret_metric(stats.diversity, [0.5, 2])
+        diversity_category = self.interpret_metric(stats.diversity, [0.3, 0.7])
         complexity_category = self.interpret_metric(stats.complexity, [5, 10])
         fitness_category = (
             "Best" if stats.best_fitness == 0 else
@@ -170,31 +170,31 @@ class Logger:
             f"Local Search Algorithms: {strategy_usage.get('local_search', {})}\n"
         )
 
-        # Logga il sommario nella console e nei messaggi locali
+        # Log the summary to console and local messages
         self.logger.info(summary)
         self.log_message(summary)
 
-        # Aggiunge il sommario al file globale di riepilogo
+        # Append the summary to the global summary file
         with open(self.GLOBAL_SUMMARY_FILE, "a") as f:
             f.write(summary)
-            f.write("\n" + "="*60 + "\n")
+            f.write("\n" + "=" * 60 + "\n")
 
-        # Salva su CSV
+        # Save the logs to CSV
         self.flush_logs()
 
     def flush_logs(self):
         """
-        Salva metriche e messaggi in un unico file CSV, con due sezioni separate.
+        Save metrics and messages into a single CSV file with two separate sections.
         """
         with open(self.log_file, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
-            # Sezione metriche
+            # Metrics section
             writer.writerow(["# Metrics"])
             writer.writerow(self.metrics_fields)
             for row in self.metrics_logs:
                 writer.writerow([row[field] for field in self.metrics_fields])
-            writer.writerow([])  # Riga vuota per separare
-            # Sezione messaggi
+            writer.writerow([])  # Empty row for separation
+            # Messages section
             writer.writerow(["# Algorithm strategies track"])
             writer.writerow(self.messages_fields)
             for row in self.messages_logs:
@@ -202,7 +202,7 @@ class Logger:
 
     def log_problem_header(self, problem_id):
         """
-        Logga un header per separare i log di un nuovo problema.
+        Log a header to separate the logs of a new problem.
         """
         separator = "-" * 40
         header = f"\n{separator}\nProblem {problem_id}\n{separator}\n"
@@ -213,7 +213,7 @@ class Logger:
                               generations_no_improv, total_generations,
                               best_formula, total_time):
         """
-        Salva le metriche essenziali per il problema corrente in una lista per il riepilogo finale.
+        Store the essential metrics for the current problem in a list for the final summary.
         """
         self.problems_summary.append({
             "problem_id": problem_id,
@@ -227,7 +227,7 @@ class Logger:
 
     def print_final_summary(self):
         """
-        Stampa e logga una tabella riassuntiva dei problemi processati.
+        Print and log a summary table of the processed problems.
         """
         summary_lines = []
         summary_lines.append("\n********** GLOBAL SUMMARY **********\n")
@@ -244,7 +244,7 @@ class Logger:
         final_summary = "\n".join(summary_lines)
         self.logger.info(final_summary)
         self.log_message(final_summary)
-        # Aggiunge il riepilogo al file globale di riepilogo
+        # Append the final summary to the global summary file
         with open(self.GLOBAL_SUMMARY_FILE, "a") as f:
             f.write(final_summary)
             f.write("\n" + "*" * 60 + "\n")

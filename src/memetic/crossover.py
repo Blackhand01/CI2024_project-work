@@ -84,17 +84,17 @@ class AdaptiveCrossoverManager:
         Dynamically selects the active crossover strategy based on statistics.
         """
         old_strategy = self.active_strategy
-        new_strategy = "one_point"  # Default strategy
+        new_strategy = "subtree"  # Default strategy
         reason = "Default conditions"
 
         if self.statistics.generations_no_improvement > 3:
-            new_strategy = "subtree"
+            new_strategy = "one_point"
             reason = "Stagnation detected"
-        elif self.statistics.diversity < 0.5:
-            new_strategy = "blended"
+        elif self.statistics.diversity < 0.3:
+            new_strategy = "subtree"
             reason = "Low diversity (<0.5)"
         elif self.statistics.complexity > 5:
-            new_strategy = "uniform"
+            new_strategy = "blended"
             reason = "High complexity (>5)"
 
         if old_strategy != new_strategy:

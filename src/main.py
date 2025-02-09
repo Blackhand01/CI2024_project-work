@@ -6,7 +6,7 @@ from utility.logger import Logger
 
 def main():
     data_dir = './data'
-    output_file = './src/s333971.py'
+    output_file = './s333971.py'
     base_output_dir = './experiments/'
     data_files = sorted(Path(data_dir).glob('*.npz'))
 

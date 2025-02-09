@@ -111,7 +111,7 @@ class AdaptiveMutationManager:
         elif self.statistics.complexity > 5:
             new_strategy = "shrink"
             reason = "High complexity (>5)"
-        elif self.statistics.diversity < 0.1:
+        elif self.statistics.diversity < 0.3:
             new_strategy = "subtree"
             reason = "Low diversity (<3)"
         else:

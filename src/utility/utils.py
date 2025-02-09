@@ -1,6 +1,3 @@
-# ==============================================
-# Function to save the best formula to a file
-# ==============================================
 from pathlib import Path
 import random
 import numpy as np
@@ -27,7 +24,7 @@ def initialize_experiment(data_file, base_output_dir):
     """
     random.seed(SEED)
     np.random.seed(SEED)
-    # Extract the problem ID from the last part of the file name
+
     problem_id = data_file.stem.split('_')[-1]
     problem_dir = Path(base_output_dir) / f"problem_{problem_id}"
     log_dir = problem_dir / "logs"
@@ -36,7 +33,6 @@ def initialize_experiment(data_file, base_output_dir):
     log_dir.mkdir(parents=True, exist_ok=True)
     plot_dir.mkdir(parents=True, exist_ok=True)
 
-    # NOTE: We no longer create a dedicated logger here.
     return {
         "problem_id": problem_id,
         "problem_dir": problem_dir,
@@ -74,12 +70,11 @@ def run_genetic_programming(x, y, logger):
     Returns:
         tuple: The best individual and GP statistics.
     """
-    # Instantiate GPStatistics, passing the logger to track strategy changes
     stats = GPStatistics(logger)
     logger.info("Initializing Genetic Programming.")
     
     gp = GeneticProgramming(
-        n_features=x.shape[1],
+        n_features=x.shape[0],
         generations=N_GENERATIONS,
         bloat_penalty=BLOAT_PENALTY,
         stats=stats
@@ -110,7 +105,6 @@ def save_results(best_individual, stats, output_file, function_name, plot_dir):
         function_name=function_name
     )
 
-    # Generate and save all plots using the Plotter
     plotter = Plotter(plot_dir=str(plot_dir), plot_dir_prefix=function_name, history=stats.history)
     plotter.save_all_plots(strategy_usage=stats.strategy_usage)
 

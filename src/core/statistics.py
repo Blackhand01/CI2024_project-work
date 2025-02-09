@@ -47,18 +47,18 @@ class GPStatistics:
         """
         self.current_generation += 1
 
-        # Stagnation
+        # Check for stagnation
         if best_fitness_current < self.best_fitness:
             self.best_fitness = best_fitness_current
             self.generations_no_improvement = 0
         else:
             self.generations_no_improvement += 1
 
-        # Complexity
+        # Calculate complexity as the average tree size in the population
         sizes = [ind.tree_size() for ind in population]
         self.complexity = float(np.mean(sizes))
 
-        # Diversity
+        # Calculate diversity
         self.diversity = self.calculate_diversity(population, x, y, bloat_penalty)
 
         # Calculate average fitness
@@ -108,8 +108,10 @@ class GPStatistics:
 
     def calculate_diversity(self, population, x, y, bloat_penalty) -> float:
         """
-        Calculate diversity as the standard deviation of normalized fitness values.
-
+        Calculate diversity as the standard deviation of normalized fitness values,
+        then normalize it so that the maximum possible diversity (for a uniform
+        distribution in [0,1]) becomes 1.
+        
         Args:
             population (list): List of individuals in the population.
             x (np.ndarray): Input data.
@@ -117,16 +119,33 @@ class GPStatistics:
             bloat_penalty (float): Penalty for tree complexity.
 
         Returns:
-            float: Diversity value.
+            float: Normalized diversity value in the range [0, 1].
         """
         evaluator = Evaluator()
         fits = [evaluator.fitness_function(ind, x, y, bloat_penalty) for ind in population]
         fits = np.array(fits)
+        # Filter out any non-finite values
         fits = fits[np.isfinite(fits)]
         if len(fits) == 0:
             return 0.0
-        fits_normalized = (fits - np.min(fits)) / (np.ptp(fits) + 1e-10)
-        return float(np.std(fits_normalized))
+
+        # Normalize fitness values to [0, 1]
+        min_fit = np.min(fits)
+        ptp_fit = np.ptp(fits) + 1e-10  # Add epsilon to avoid division by zero
+        fits_normalized = (fits - min_fit) / ptp_fit
+
+        # Calculate the standard deviation of the normalized values
+        diversity = np.std(fits_normalized)
+
+        # The maximum standard deviation of a uniform distribution in [0,1] is 1/sqrt(12)
+        max_std = 1 / np.sqrt(12)
+
+        # Normalize diversity by dividing by the maximum value
+        normalized_diversity = diversity / max_std
+
+        # Ensure the resulting value is within [0, 1]
+        normalized_diversity = np.clip(normalized_diversity, 0, 1)
+        return float(normalized_diversity)
 
     def export_history_to_csv(self, file_path):
         """

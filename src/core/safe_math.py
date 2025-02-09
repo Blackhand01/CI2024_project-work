@@ -19,8 +19,9 @@ def safe_divide(x: np.ndarray, y: np.ndarray) -> np.ndarray:
 
 
 def safe_ln(x: np.ndarray) -> np.ndarray:
-    """Apply natural logarithm safely, avoiding ln(0) and negative values."""
-    return np.log(clip_values(x, MIN_FLOAT, MAX_FLOAT))
+    x_safe = np.where(x <= 0, MIN_FLOAT, x)
+    return np.log(np.clip(x_safe, MIN_FLOAT, MAX_FLOAT))
+
 
 
 def safe_sqrt(x: np.ndarray) -> np.ndarray:
@@ -46,13 +47,13 @@ def safe_exp(x: np.ndarray) -> np.ndarray:
 
 
 def safe_log2(x: np.ndarray) -> np.ndarray:
-    """Apply log base 2 safely."""
-    return np.log2(clip_values(x, MIN_FLOAT, MAX_FLOAT))
-
+    x_safe = np.where(x <= 0, MIN_FLOAT, x)
+    return np.log2(np.clip(x_safe, MIN_FLOAT, MAX_FLOAT))
 
 def safe_log10(x: np.ndarray) -> np.ndarray:
-    """Apply log base 10 safely."""
-    return np.log10(clip_values(x, MIN_FLOAT, MAX_FLOAT))
+    x_safe = np.where(x <= 0, MIN_FLOAT, x)
+    return np.log10(np.clip(x_safe, MIN_FLOAT, MAX_FLOAT))
+
 
 
 # Operator Class
