@@ -4,7 +4,7 @@ import numpy as np
 from core.evaluator import Evaluator
 from core.tree import Node, random_variable, random_constant
 
-class HeapBasedGPOptimizer:
+class HeapBasedOptimizer:
     """
     Heap-Based Genetic Programming Optimizer.
     
