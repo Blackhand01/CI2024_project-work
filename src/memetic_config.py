@@ -1,41 +1,57 @@
-# ==============================================
-#               CONFIGURATION                  
-# ==============================================
+# =============================================================================
+#                           MEMETIC GP CONFIGURATION
+# =============================================================================
 
-# Population parameters
-POP_SIZE = 100               # Increased population size for greater diversity
-MAX_DEPTH = 7                # Reduced maximum depth to mitigate bloat
-N_GENERATIONS = 100          # Increased number of generations
-TOURNAMENT_SIZE = 10         # Higher selective pressure
-MUTATION_RATE = 0.6          # Reduced to balance the effect of crossover
-CROSSOVER_RATE = 0.4         # Increased to encourage exploration
-ELITISM = 10                 # Increased number of elite individuals
+# -----------------------------------------------------------------------------
+# 1) POPULATION PARAMETERS
+# -----------------------------------------------------------------------------
+POP_SIZE = 100            # Population size (improves diversity)
+MAX_DEPTH = 7             # Maximum tree depth (mitigates bloat)
+N_GENERATIONS = 100       # Number of generations
+TOURNAMENT_SIZE = 10      # Increased selection pressure
+MUTATION_RATE = 0.6       # Mutation probability
+CROSSOVER_RATE = 0.4      # Crossover probability
+ELITISM = 10               # Number of elite individuals
 
-# Bloat control parameter
-BLOAT_PENALTY = 0            # Increased penalty to favor smaller trees
+# -----------------------------------------------------------------------------
+# 2) BLOAT CONTROL
+# -----------------------------------------------------------------------------
+BLOAT_PENALTY = 0      # Penalty for large trees
 
-# Partial Reinitialization parameters
-PARTIAL_REINIT_EVERY = 100   # Increased reinitialization frequency (obsolete)
-PARTIAL_REINIT_RATIO = 0.25  # Increased reinitialization proportion (obsolete)
-DIVERSITY_THRESHOLD = 0.1    # Threshold to trigger reinitialization
-REINIT_FRACTION = 0.2        # Fraction of the population to reinitialize
+# -----------------------------------------------------------------------------
+# 3) REINITIALIZATION PARAMETERS
+# -----------------------------------------------------------------------------
+DIVERSITY_THRESHOLD = 0.1 # Threshold to trigger reinitialization
+REINIT_FRACTION = 0.2     # Fraction of the population to reinitialize
 
-# New options
-ENABLE_LOCAL_SEARCH = True   # Enable/disable local search
-ADAPTIVE_STRATEGY = True     # Enable/disable adaptive strategies
+# -----------------------------------------------------------------------------
+# 4) LOCAL SEARCH & ADAPTIVE STRATEGY
+# -----------------------------------------------------------------------------
+ENABLE_LOCAL_SEARCH = True # Enable/disable local search
+ADAPTIVE_STRATEGY = True   # Enable/disable adaptive strategies
 
-# Early stopping parameters
+# -----------------------------------------------------------------------------
+# 5) EARLY STOPPING PARAMETERS
+# -----------------------------------------------------------------------------
 MAX_GENERATIONS_NO_IMPROVEMENT = 20  # Maximum generations without improvement
-FITNESS_THRESHOLD = 1                # Minimum threshold for best fitness
+FITNESS_THRESHOLD = 1                # Minimum fitness threshold for early stopping
 
-# Seed for reproducibility
-SEED = 42
+# -----------------------------------------------------------------------------
+# 6) REPRODUCIBILITY
+# -----------------------------------------------------------------------------
+SEED = 42                 # Global seed for reproducibility
 
-# Artificial Bee Colony (ABC) settings
-ENABLE_ABC = True  # Flag to enable ABC algorithm
+# -----------------------------------------------------------------------------
+# 7) ARTIFICIAL BEE COLONY (ABC) SETTINGS
+# -----------------------------------------------------------------------------
+ENABLE_ABC = True         # Flag to enable the ABC algorithm
+ABC_MAX_TRIALS = 10       # Maximum number of trials before replacing the food source
+ABC_NUM_ONLOOKERS = 500   # Number of onlooker bees
 
-# Heap-Based Optimizer (HBO) settings
-ENABLE_HBO = True             # Flag to enable the Heap-Based Optimizer
-HBO_MAX_ITERATIONS = 5        # Maximum number of iterations for HBO
-HBO_NEIGHBOR_COUNT = 100      # Number of neighbors to generate per candidate
-HBO_THRESHOLD = 1             # Fitness threshold above which HBO is activated
+# -----------------------------------------------------------------------------
+# 8) HEAP-BASED OPTIMIZER (HBO) SETTINGS
+# -----------------------------------------------------------------------------
+ENABLE_HBO = True         # Flag to enable the Heap-Based Optimizer
+HBO_MAX_ITERATIONS = 5    # Maximum iterations for HBO
+HBO_NEIGHBOR_COUNT = 100  # Number of neighbors generated per candidate
+HBO_THRESHOLD = 1         # Fitness threshold above which to activate HBO

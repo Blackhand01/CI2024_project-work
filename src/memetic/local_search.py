@@ -10,7 +10,7 @@ class LocalSearchManager:
     Includes hill climbing, tabu search, simulated annealing, random improvement, and optional Glowworm (GSO).
     """
 
-    def __init__(self, statistics, tabu_size=10, initial_temperature=1.0, cooling_rate=0.95):
+    def __init__(self, statistics, tabu_size=5000, initial_temperature=1.0, cooling_rate=0.95):
         self.statistics = statistics
         self.evaluator = Evaluator()
         self.active_strategy = "simulated_annealing"  # Default strategy

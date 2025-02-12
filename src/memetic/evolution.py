@@ -9,11 +9,12 @@ from memetic.abc import ArtificialBeeColonyManager
 from memetic.hbo import HeapBasedOptimizer
 from core.evaluator import Evaluator
 
+# Also import the new parameters moved to memetic_config
 from memetic_config import (
     MAX_DEPTH, ELITISM, POP_SIZE, 
     CROSSOVER_RATE, MUTATION_RATE, ENABLE_LOCAL_SEARCH, DIVERSITY_THRESHOLD,
     REINIT_FRACTION, MAX_GENERATIONS_NO_IMPROVEMENT, FITNESS_THRESHOLD,
-    ENABLE_ABC,
+    ENABLE_ABC, ABC_MAX_TRIALS, ABC_NUM_ONLOOKERS,  # <--- Use the ABC parameters here
     ENABLE_HBO, HBO_MAX_ITERATIONS, HBO_NEIGHBOR_COUNT, HBO_THRESHOLD
 )
 
@@ -40,8 +41,8 @@ class GeneticProgramming:
         # << ABC ADDED: instantiate a manager for the ABC algorithm >>
         self.abc_manager = ArtificialBeeColonyManager(
             statistics=stats,
-            max_trials=10,      # Adjustable parameter
-            n_onlookers=500     # Adjustable parameter
+            max_trials=ABC_MAX_TRIALS,       # now taken from memetic_config
+            n_onlookers=ABC_NUM_ONLOOKERS    # now taken from memetic_config
         )
 
     def generate_population(self):
